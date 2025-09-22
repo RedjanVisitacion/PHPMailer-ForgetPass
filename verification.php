@@ -59,7 +59,7 @@
             <div class="verification-form" id="loginForm">
                 <h2 class="text-center">Email Verification</h2>
                 <p class="text-center">Please check your email for verification code.</p>
-                <form action="./endpoint/add-user.php" method="POST">
+                <form action="./rpsv_codes/add-user.php" method="POST">
                     <input type="text" name="user_verification_id" value="<?= $userVerificationID ?>" hidden>
                     <input type="number" class="form-control text-center" id="verificationCode" name="verification_code">
                     <button type="submit" class="btn btn-secondary login-btn form-control mt-4" name="verify">Verify</button>
