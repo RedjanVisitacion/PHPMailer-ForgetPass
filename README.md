@@ -23,4 +23,5 @@ Simple password reset flow using PHP, MySQL, and PHPMailer. Users can request a 
 
 ## Credits
 - PHPMailer by the PHPMailer team: https://github.com/PHPMailer/PHPMailer
-- Built for the VISITACION project (local XAMPP setup)
+- Built for the Information Assurance Security (Activity)
+- Created by: Redjan Phil S. Visitacion
