@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_reset'])) {
         $stmt->execute();
 
         if ($stmt->rowCount() === 0) {
-            echo "<script>alert('If the account exists, a reset code has been sent.'); window.location.href = 'http://localhost/VISITACION/index.php?form=reset&email=" . urlencode($email) . "&username=" . urlencode($username) . "';</script>";
+            echo "<script>alert('Account does not exist. Please check your username and email.'); window.location.href = 'http://localhost/VISITACION/index.php?form=forgot';</script>";
             exit;
         }
 

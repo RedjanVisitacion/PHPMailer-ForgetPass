@@ -89,30 +89,30 @@
                 <div class="form-group registration row">
                     <div class="col-6">
                         <label for="firstName">First Name:</label>
-                        <input type="text" class="form-control" id="firstName" name="first_name">
+                        <input type="text" class="form-control" id="firstName" name="first_name" required>
                     </div>
                     <div class="col-6">
                         <label for="lastName">Last Name:</label>
-                        <input type="text" class="form-control" id="lastName" name="last_name">
+                        <input type="text" class="form-control" id="lastName" name="last_name" required>
                     </div>
                 </div>
                 <div class="form-group registration row">
                     <div class="col-5">
                         <label for="contactNumber">Contact Number:</label>
-                        <input type="number" class="form-control" id="contactNumber" name="contact_number" maxlength="11">
+                        <input type="tel" class="form-control" id="contactNumber" name="contact_number" pattern="^[0-9]{10,13}$" maxlength="13" minlength="10" required>
                     </div>
                     <div class="col-7">
                         <label for="email">Email:</label>
-                        <input type="text" class="form-control" id="email" name="email">
+                        <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                 </div>
                 <div class="form-group registration">
                     <label for="registerUsername">Username:</label>
-                    <input type="text" class="form-control" id="registerUsername" name="username">
+                    <input type="text" class="form-control" id="registerUsername" name="username" required>
                 </div>
                 <div class="form-group registration">
                     <label for="registerPassword">Password:</label>
-                    <input type="password" class="form-control" id="registerPassword" name="password">
+                    <input type="password" class="form-control" id="registerPassword" name="password" minlength="6" required>
                 </div>
                 <p>Already have an account? Login <span class="switch-form-link" onclick="showLoginForm()">Here.</span></p>
                 <button type="submit" class="btn btn-dark login-register form-control" name="register">Register</button>
@@ -134,7 +134,7 @@
                     <label for="forgotEmail">Email:</label>
                     <input type="email" class="form-control" id="forgotEmail" name="email" required>
                 </div>
-                <p>Already have a code? Reset <span class="switch-form-link" onclick="showResetForm()">Here.</span></p>
+                <!-- <p>Already have a code? Reset <span class="switch-form-link" onclick="showResetForm()">Here.</span></p> -->
                 <p>Remembered your password? Login <span class="switch-form-link" onclick="showLoginForm()">Here.</span></p>
                 <button type="submit" class="btn btn-info form-control" name="send_reset">Send Reset Code</button>
             </form>
@@ -147,11 +147,11 @@
             <form action="./endpoint/reset-password.php" method="POST">
                 <div class="form-group">
                     <label for="resetUsername">Username:</label>
-                    <input type="text" class="form-control" id="resetUsername" name="username" required>
+                    <input type="text" class="form-control" id="resetUsername" name="username" required readonly>
                 </div>
                 <div class="form-group">
                     <label for="resetEmail">Email:</label>
-                    <input type="email" class="form-control" id="resetEmail" name="email" required>
+                    <input type="email" class="form-control" id="resetEmail" name="email" required readonly>
                 </div>
                 <div class="form-group">
                     <label for="resetCode">Reset Code:</label>
