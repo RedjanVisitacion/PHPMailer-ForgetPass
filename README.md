@@ -11,7 +11,7 @@ Simple password reset flow using PHP, MySQL, and PHPMailer. Users can request a 
 ## Quick Start
 1. Import the provided SQL schema: `conn/rpsv.sql` (or your own schema) into your MySQL database.
 2. Update database credentials in `conn/conn.php`.
-3. Configure PHPMailer SMTP settings in `endpoint/phpmailer` usage or your email-sending script(s).
+3. Configure PHPMailer SMTP settings in `rpsv_codes/phpmailer` usage or your email-sending script(s).
 4. Run the project on your local server (e.g., XAMPP) and open `index.php`.
 
 ## File Highlights
