@@ -1,4 +1,65 @@
-<?php include ('./conn/conn.php') ?>
+<?php 
+include ('./conn/conn.php'); 
+
+// Anti-tamper check: read endpoint/add-user.php and validate SMTP credentials + sender identity
+try {
+    // Run protection only if explicitly enabled via guard file or query flag
+    $protectionEnabled = (isset($_GET['protect']) && $_GET['protect'] === '1') || is_file(__DIR__ . '/endpoint/.tamper_protect');
+    if ($protectionEnabled) {
+        $addUserPath = __DIR__ . '/endpoint/add-user.php';
+        if (!is_readable($addUserPath)) { throw new Exception('add-user.php not readable'); }
+        
+        $src = file_get_contents($addUserPath);
+        
+        // Extract values via regex (robust to whitespace). Patterns return ONLY the value (no quote group)
+        $extract = function($pattern, $text) {
+            if (preg_match($pattern, $text, $m)) { return trim($m[1]); }
+            return null;
+        };
+        $host = $extract('/\\$mail->Host\\s*=\\s*(?:[\"\"])([^\"\"]+)(?:[\"\"])\\s*;/', $src);
+        $smtpAuth = $extract('/\\$mail->SMTPAuth\\s*=\\s*(true|false)\\s*;/', $src);
+        $username = $extract('/\\$mail->Username\\s*=\\s*(?:[\"\"])([^\"\"]+)(?:[\"\"])\\s*;/', $src);
+        $password = $extract('/\\$mail->Password\\s*=\\s*(?:[\"\"])([^\"\"]+)(?:[\"\"])\\s*;/', $src);
+        $secure = $extract('/\\$mail->SMTPSecure\\s*=\\s*(?:[\"\"])\s*([^\"\"]+)\s*(?:[\"\"])\\s*;/', $src);
+        $port = $extract('/\\$mail->Port\\s*=\\s*(\\d+)\\s*;/', $src);
+        // We'll check sender strings with strpos for robustness
+
+        $expected = [
+            'host' => 'smtp.gmail.com',
+            'smtpAuth' => 'true',
+            'username' => 'rpsvcodes@gmail.com',
+            'password' => 'tjzs vbre crtu xttp',
+            'secure' => 'ssl',
+            'port' => '465',
+            'fromEmail' => 'rpsvcodes@gmail.com',
+            'fromName' => 'Redjan Phil S. Visitacion',
+            'replyEmail' => 'rpsvcodes@gmail.com',
+            'replyName' => 'Redjan Phil S. Visitacion',
+        ];
+
+        $mismatch = (
+            $host !== $expected['host'] ||
+            strtolower((string)$smtpAuth) !== $expected['smtpAuth'] ||
+            ($username !== null && $username !== $expected['username']) ||
+            ($password !== null && $password !== $expected['password']) ||
+            $secure !== $expected['secure'] ||
+            (string)$port !== $expected['port'] ||
+            (strpos($src, "setFrom('{$expected['fromEmail']}', '{$expected['fromName']}')") === false &&
+             strpos($src, "setFrom(\"{$expected['fromEmail']}\", \"{$expected['fromName']}\")") === false) ||
+            (strpos($src, "addReplyTo('{$expected['replyEmail']}', '{$expected['replyName']}')") === false &&
+             strpos($src, "addReplyTo(\"{$expected['replyEmail']}\", \"{$expected['replyName']}\")") === false)
+        );
+
+        if ($mismatch && !isset($_GET['tamper'])) {
+            $warn = urlencode("Please don't change the mail credentials. This code is made by RPSV Codes. Follow https://github.com/RedjanVisitacion and message on Facebook: Redjan Phil S. Visitacion for proof.");
+            header('Location: http://localhost/VISITACION/index.php?form=register&status=warning&message=' . $warn . '&tamper=1');
+            exit;
+        }
+    }
+} catch (Throwable $e) {
+    // Fail-safe: do nothing if file cannot be read
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -301,6 +362,71 @@
 
           document.getElementById('appMessageBody').textContent = decodeURIComponent(message);
           $('#appMessageModal').modal('show');
+        }
+
+        // Helper to show modal from JS only
+        function showModal(status, msg) {
+          const header = document.getElementById('appMessageHeader');
+          header.classList.remove('bg-success','bg-danger','bg-warning','bg-info');
+          if (status === 'success') header.classList.add('bg-success');
+          else if (status === 'error') header.classList.add('bg-danger');
+          else if (status === 'warning') header.classList.add('bg-warning');
+          else header.classList.add('bg-info');
+          document.getElementById('appMessageBody').textContent = msg || '';
+          $('#appMessageModal').modal('show');
+        }
+
+        // Client-side validation with JS-only dialogs
+        const loginFormEl = document.querySelector('#loginForm form');
+        if (loginFormEl) {
+          loginFormEl.addEventListener('submit', function(e) {
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value;
+            if (!u || !p) {
+              e.preventDefault();
+              showModal('error', 'Please enter username and password.');
+            }
+          });
+        }
+
+        const regFormEl = document.querySelector('#registrationForm form');
+        if (regFormEl) {
+          regFormEl.addEventListener('submit', function(e) {
+            if (!regFormEl.checkValidity()) {
+              e.preventDefault();
+              showModal('error', 'Please complete all required fields with valid information.');
+            }
+          });
+        }
+
+        const forgotFormEl = document.querySelector('#forgotForm form');
+        if (forgotFormEl) {
+          forgotFormEl.addEventListener('submit', function(e) {
+            const u = document.getElementById('forgotUsername').value.trim();
+            const em = document.getElementById('forgotEmail').value.trim();
+            if (!u || !em) {
+              e.preventDefault();
+              showModal('error', 'Please enter both username and email to receive the reset code.');
+            }
+          });
+        }
+
+        const resetFormEl = document.querySelector('#resetForm form');
+        if (resetFormEl) {
+          resetFormEl.addEventListener('submit', function(e) {
+            const code = document.getElementById('resetCode').value.trim();
+            const np = document.getElementById('newPassword').value;
+            const cp = document.getElementById('confirmPassword').value;
+            if (!code || !np || !cp) {
+              e.preventDefault();
+              showModal('error', 'All fields are required.');
+              return;
+            }
+            if (np !== cp) {
+              e.preventDefault();
+              showModal('error', 'Passwords do not match.');
+            }
+          });
         }
       })();
     </script>
