@@ -261,11 +261,49 @@
         }
 
     </script>
+    
+    <!-- App Message Modal -->
+    <div class="modal fade" id="appMessageModal" tabindex="-1" role="dialog" aria-labelledby="appMessageTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-white" id="appMessageHeader">
+            <h5 class="modal-title" id="appMessageTitle">Notice</h5>
+            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="appMessageBody"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Bootstrap Js -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+    <!-- Trigger modal based on URL params -->
+    <script>
+      (function () {
+        const params = new URLSearchParams(window.location.search);
+        const status = params.get('status');
+        const message = params.get('message');
+        if (message) {
+          const header = document.getElementById('appMessageHeader');
+          header.classList.remove('bg-success','bg-danger','bg-warning','bg-info');
+          if (status === 'success') header.classList.add('bg-success');
+          else if (status === 'error') header.classList.add('bg-danger');
+          else if (status === 'warning') header.classList.add('bg-warning');
+          else header.classList.add('bg-info');
+
+          document.getElementById('appMessageBody').textContent = decodeURIComponent(message);
+          $('#appMessageModal').modal('show');
+        }
+      })();
+    </script>
 
 </body>
 </html>

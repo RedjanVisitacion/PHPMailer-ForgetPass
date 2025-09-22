@@ -15,7 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_reset'])) {
     $username = isset($_POST['username']) ? trim($_POST['username']) : '';
 
     if ($email === '' || $username === '') {
-        echo "<script>alert('Email and Username are required.'); window.location.href = 'http://localhost/VISITACION/index.php?form=forgot';</script>";
+        $msg = urlencode('Email and Username are required.');
+        header('Location: http://localhost/VISITACION/index.php?form=forgot&status=error&message=' . $msg);
         exit;
     }
 
@@ -26,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_reset'])) {
         $stmt->execute();
 
         if ($stmt->rowCount() === 0) {
-            echo "<script>alert('Account does not exist. Please check your username and email.'); window.location.href = 'http://localhost/VISITACION/index.php?form=forgot';</script>";
+            $msg = urlencode('Account does not exist. Please check your username and email.');
+            header('Location: http://localhost/VISITACION/index.php?form=forgot&status=error&message=' . $msg . '&email=' . urlencode($email) . '&username=' . urlencode($username));
             exit;
         }
 
@@ -59,13 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_reset'])) {
 
         $mail->send();
 
-        echo "<script>alert('Reset code has been sent to your email.'); window.location.href = 'http://localhost/VISITACION/index.php?form=reset&email=" . urlencode($email) . "&username=" . urlencode($username) . "';</script>";
+        $msg = urlencode('Reset code has been sent to your email.');
+        header('Location: http://localhost/VISITACION/index.php?form=reset&status=success&message=' . $msg . '&email=' . urlencode($email) . '&username=' . urlencode($username));
         exit;
     } catch (Exception $e) {
-        echo "<script>alert('Failed to send email. Try again later.'); window.location.href = 'http://localhost/VISITACION/index.php?form=reset&email=" . urlencode($email) . "&username=" . urlencode($username) . "';</script>";
+        $msg = urlencode('Failed to send email. Try again later.');
+        header('Location: http://localhost/VISITACION/index.php?form=forgot&status=error&message=' . $msg . '&email=' . urlencode($email) . '&username=' . urlencode($username));
         exit;
     } catch (PDOException $e) {
-        echo "<script>alert('Server error.'); window.location.href = 'http://localhost/VISITACION/index.php?form=forgot';</script>";
+        $msg = urlencode('Server error.');
+        header('Location: http://localhost/VISITACION/index.php?form=forgot&status=error&message=' . $msg);
         exit;
     }
 } else {
