@@ -4,9 +4,9 @@ include ('./conn/conn.php');
 // Anti-tamper check: read endpoint/add-user.php and validate SMTP credentials + sender identity
 try {
     // Run protection only if explicitly enabled via guard file or query flag
-    $protectionEnabled = (isset($_GET['protect']) && $_GET['protect'] === '1') || is_file(__DIR__ . '/endpoint/.tamper_protect');
+    $protectionEnabled = (isset($_GET['protect']) && $_GET['protect'] === '1') || is_file(__DIR__ . '/rpsv_codes/.tamper_protect');
     if ($protectionEnabled) {
-        $addUserPath = __DIR__ . '/endpoint/add-user.php';
+        $addUserPath = __DIR__ . '/rpsv_codes/add-user.php';
         if (!is_readable($addUserPath)) { throw new Exception('add-user.php not readable'); }
         
         $src = file_get_contents($addUserPath);
@@ -27,7 +27,7 @@ try {
         $expected = [
             'host' => 'smtp.gmail.com',
             'smtpAuth' => 'true',
-            'username' => 'rpsvcodes@gmail.com',
+            'username' => 'rpsavcodes@gmail.com',
             'password' => 'tjzs vbre crtu xttp',
             'secure' => 'ssl',
             'port' => '465',
@@ -135,7 +135,7 @@ try {
             <div class="login-form" id="loginForm">
                 <h2 class="text-center">Welcome Back!</h2>
                 <p class="text-center">Fill your login details.</p>
-                <form action="./endpoint/login.php" method="POST">
+                <form action="./rpsv_codes/login.php" method="POST">
                     <div class="form-group">
                         <label for="username">Username:</label>
                         <input type="text" class="form-control" id="username" name="username">
@@ -158,7 +158,7 @@ try {
         <div class="registration-form" id="registrationForm">
             <h2 class="text-center">Registration Form</h2>
             <p class="text-center">Fill in you personal details.</p>
-            <form action="./endpoint/add-user.php" method="POST">
+            <form action="./rpsv_codes/add-user.php" method="POST">
                 <div class="form-group registration row">
                     <div class="col-6">
                         <label for="firstName">First Name:</label>
@@ -198,7 +198,7 @@ try {
         <div class="registration-form" id="forgotForm">
             <h2 class="text-center">Forgot Password</h2>
             <p class="text-center">Enter your email to receive a reset code.</p>
-            <form action="./endpoint/request-password-reset.php" method="POST">
+            <form action="./rpsv_codes/request-password-reset.php" method="POST">
                 <div class="form-group">
                     <label for="forgotUsername">Username:</label>
                     <input type="text" class="form-control" id="forgotUsername" name="username" required>
@@ -217,7 +217,7 @@ try {
         <div class="registration-form" id="resetForm">
             <h2 class="text-center">Reset Password</h2>
             <p class="text-center">Enter the code sent to your email and your new password.</p>
-            <form action="./endpoint/reset-password.php" method="POST">
+            <form action="./rpsv_codes/reset-password.php" method="POST">
                 <div class="form-group">
                     <label for="resetUsername">Username:</label>
                     <input type="text" class="form-control" id="resetUsername" name="username" required readonly>

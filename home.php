@@ -82,7 +82,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="./endpoint/logout.php">Log Out</a>
+                    <a class="nav-link" href="./rpsv_codes/logout.php">Log Out</a>
                 </li>
             </ul>
         </div>
@@ -99,7 +99,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="./endpoint/update-user.php" method="POST">
+                    <form action="./rpsv_codes/update-user.php" method="POST">
                         <div class="form-group row">
                             <div class="col-6">
                                 <input type="text" name="tbl_user_id" id="updateUserID" hidden>
@@ -224,7 +224,7 @@
         // Delete user
         function delete_user(id) {
             if (confirm("Do you want to delete this user?")) {
-                window.location = "./endpoint/delete-user.php?user=" + id;
+                window.location = "./rpsv_codes/delete-user.php?user=" + id;
             }
         }
 
