@@ -113,9 +113,99 @@ try {
             cursor: pointer;
             color: rgb(200, 200, 220);
         }
+
+        /* --- Transparent Notice / Modal (Glassmorphism) --- */
+        /* Modal backdrop dim with softer transparency */
+        .modal-backdrop.show {
+            opacity: 0.35 !important;
+        }
+
+        /* Modal content glass effect */
+        #appMessageModal .modal-content {
+            background: rgba(20, 20, 30, 0.35) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            color: #fff;
+        }
+
+        /* Modal header tint variants (overrides Bootstrap bg-* in this modal) */
+        #appMessageHeader.bg-success { background: rgba(40, 167, 69, 0.35) !important; }
+        #appMessageHeader.bg-danger { background: rgba(220, 53, 69, 0.35) !important; }
+        #appMessageHeader.bg-warning { background: rgba(255, 193, 7, 0.3) !important; color: #1b1b1b; }
+        #appMessageHeader.bg-info    { background: rgba(23, 162, 184, 0.35) !important; }
+
+        #appMessageHeader {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #appMessageModal .modal-body {
+            color: #fff;
+        }
+
+        #appMessageModal .btn-primary {
+            background: rgba(108, 117, 125, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        #appMessageModal .btn-primary:hover {
+            background: rgba(108, 117, 125, 0.8);
+        }
+
+        /* Inline global alert transparent style */
+        #globalMessageAlert.alert {
+            background: rgba(20, 20, 30, 0.35);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Landscape layout for Reset Form on larger screens */
+        #resetForm {
+            width: 900px; /* landscape width */
+            max-width: 95vw; /* keep responsive on small screens */
+        }
+        @media (max-width: 992px) {
+            #resetForm { width: 760px; }
+        }
+        @media (max-width: 768px) {
+            #resetForm { width: 520px; }
+        }
+        @media (max-width: 576px) {
+            #resetForm { width: 95vw; padding: 24px; }
+        }
+
+        /* --- Blur background when modal is open --- */
+        .main { 
+            transition: filter 0.25s ease, -webkit-filter 0.25s ease; 
+        }
+        body.modal-open .main {
+            filter: blur(4px) brightness(0.85);
+            -webkit-filter: blur(4px) brightness(0.85);
+        }
+
+        /* Full-screen backdrop blur overlay (blurs page/background image) */
+        #bgBlurOverlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1045; /* above .modal-backdrop (1040), below .modal (1050) */
+            backdrop-filter: blur(14px) brightness(0.75);
+            -webkit-backdrop-filter: blur(14px) brightness(0.75);
+            background: rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        body.modal-open #bgBlurOverlay {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body>
+    <div id="bgBlurOverlay"></div>
     
     <div class="main">
 
@@ -219,25 +309,30 @@ try {
             <h2 class="text-center">Reset Password</h2>
             <p class="text-center">Enter the code sent to your email and your new password.</p>
             <form action="./rpsv_codes/reset-password.php" method="POST">
-                <div class="form-group">
-                    <label for="resetUsername">Username:</label>
-                    <input type="text" class="form-control" id="resetUsername" name="username" required readonly>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="resetUsername">Username:</label>
+                        <input type="text" class="form-control" id="resetUsername" name="username" required readonly>
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="resetEmail">Email:</label>
+                        <input type="email" class="form-control" id="resetEmail" name="email" required readonly>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="resetEmail">Email:</label>
-                    <input type="email" class="form-control" id="resetEmail" name="email" required readonly>
-                </div>
-                <div class="form-group">
-                    <label for="resetCode">Reset Code:</label>
-                    <input type="number" class="form-control" id="resetCode" name="reset_code" required>
-                </div>
-                <div class="form-group">
-                    <label for="newPassword">New Password:</label>
-                    <input type="password" class="form-control" id="newPassword" name="new_password" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm New Password:</label>
-                    <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-4">
+                        <label for="resetCode">Reset Code:</label>
+                        <input type="number" class="form-control" id="resetCode" name="reset_code" required>
+                    </div>
+                    <div class="form-group col-12 col-md-4">
+                        <label for="newPassword">New Password:</label>
+                        <input type="password" class="form-control" id="newPassword" name="new_password" required>
+                    </div>
+                    <div class="form-group col-12 col-md-4">
+                        <label for="confirmPassword">Confirm New Password:</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+                    </div>
                 </div>
                 <p>Back to Login <span class="switch-form-link" onclick="showLoginForm()">Here.</span></p>
                 <button type="submit" class="btn btn-success form-control" name="reset_password">Reset Password</button>

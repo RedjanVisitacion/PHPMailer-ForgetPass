@@ -71,9 +71,37 @@
             width: 100%;
             overflow-x: auto;
         }
+
+        /* --- Blur background when modal is open --- */
+        .content { 
+            transition: filter 0.25s ease, -webkit-filter 0.25s ease; 
+        }
+        body.modal-open .content {
+            filter: blur(4px) brightness(0.85);
+            -webkit-filter: blur(4px) brightness(0.85);
+        }
+
+        /* Full-screen backdrop blur overlay (blurs page/background image) */
+        #bgBlurOverlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1045; /* above .modal-backdrop (1040), below .modal (1050) */
+            backdrop-filter: blur(14px) brightness(0.75);
+            -webkit-backdrop-filter: blur(14px) brightness(0.75);
+            background: rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        body.modal-open #bgBlurOverlay {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body>
+    <div id="bgBlurOverlay"></div>
     
     <nav class="navbar navbar-expand-lg navbar-dark bg-secondary" style="width: 100%;">
         <a class="navbar-brand ml-5" href="home.php">User Registration and Login System</a>
