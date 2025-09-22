@@ -20,6 +20,8 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        
+
         body {
             display: flex;
             justify-content: center;
@@ -54,6 +56,16 @@
 <body>
     
     <div class="main">
+
+        <!-- Inline message area (Bootstrap alert) -->
+        <div id="globalMessage" class="container mb-3" style="max-width: 560px; display:none;">
+            <div id="globalMessageAlert" class="alert alert-info alert-dismissible fade show" role="alert">
+                <span id="globalMessageText"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
 
         <!-- Login Area -->
 

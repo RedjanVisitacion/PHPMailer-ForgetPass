@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 04, 2024 at 08:10 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Sep 22, 2025 at 02:24 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `login_email_verification`
+-- Database: `rpsv`
 --
 
 -- --------------------------------------------------------
@@ -35,15 +35,16 @@ CREATE TABLE `tbl_user` (
   `email` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `verification_code` int(6) NULL
-);
+  `verification_code` int(6) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tbl_user`
 --
 
--- INSERT INTO `tbl_user` (`tbl_user_id`, `first_name`, `last_name`, `contact_number`, `email`, `username`, `password`, `verification_code`) VALUES
--- (1, 'Redjan Phil', 'Visitacion', 09123456789, 'rpsvcodes@gmail.com', 'admin', 'admin', 01);
+INSERT INTO `tbl_user` (`tbl_user_id`, `first_name`, `last_name`, `contact_number`, `email`, `username`, `password`, `verification_code`) VALUES
+(11, 'Karla', 'Visitacion', '09534181760', 'rpsvcodes@gmail.com', 'Karlita', '$2y$10$a2uSr8gEHurq2yYoEJcBJ.yl.qaf05ufcXQNVOTagQc4fWP3T8Tq6', NULL),
+(12, 'Karla', 'Visitacion', '09534181760', 'rpsvcodes@gmail.com', 'KlR', '$2y$10$Jyn7TahZmb4fCaDR5WSWAOFSnNPJe.q7agzCv6RjpzTw4067TmmJe', 647734);
 
 --
 -- Indexes for dumped tables
@@ -53,7 +54,8 @@ CREATE TABLE `tbl_user` (
 -- Indexes for table `tbl_user`
 --
 ALTER TABLE `tbl_user`
-  ADD PRIMARY KEY (`tbl_user_id`);
+  ADD PRIMARY KEY (`tbl_user_id`),
+  ADD UNIQUE KEY `uniq_username` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -63,7 +65,7 @@ ALTER TABLE `tbl_user`
 -- AUTO_INCREMENT for table `tbl_user`
 --
 ALTER TABLE `tbl_user`
-  MODIFY `tbl_user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `tbl_user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

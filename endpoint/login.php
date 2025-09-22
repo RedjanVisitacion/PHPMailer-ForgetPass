@@ -7,12 +7,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = isset($_POST['password']) ? (string)$_POST['password'] : '';
 
     if ($username === '' || $password === '') {
-        echo "
-        <script>
-            alert('Please enter username and password.');
-            window.location.href = 'http://localhost/VISITACION/index.php';
-        </script>
-        ";
+        $msg = urlencode('Please enter username and password.');
+        header('Location: http://localhost/VISITACION/index.php?status=error&message=' . $msg);
         exit;
     }
 
@@ -28,29 +24,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['user_id'] = $row['tbl_user_id'];
             $_SESSION['username'] = $row['username'];
 
-            echo "
-            <script>
-                alert('Login Successfully!');
-                window.location.href = 'http://localhost/VISITACION/home.php';
-            </script>
-            ";
+            header('Location: http://localhost/VISITACION/home.php');
             exit;
         } else {
-            echo "
-            <script>
-                alert('Login Failed, Incorrect Password!');
-                window.location.href = 'http://localhost/VISITACION/index.php';
-            </script>
-            ";
+            $msg = urlencode('Login failed, incorrect password.');
+            header('Location: http://localhost/VISITACION/index.php?status=error&message=' . $msg . '&form=login');
             exit;
         }
     } else {
-        echo "
-        <script>
-            alert('Login Failed, User Not Found!');
-            window.location.href = 'http://localhost/VISITACION/index.php';
-        </script>
-        ";
+        $msg = urlencode('Login failed, user not found.');
+        header('Location: http://localhost/VISITACION/index.php?status=error&message=' . $msg . '&form=login');
         exit;
     }
 } else {
