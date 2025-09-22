@@ -87,10 +87,11 @@ try {
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: url("img/RPSVCODES.jpg");
+            background-image: url("img/Bg.gif");
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
+            background-position: center center;
             height: 100vh;
         }
 
