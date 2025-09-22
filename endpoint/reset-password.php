@@ -9,12 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_password'])) {
     $confirmPassword = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
 
     if ($email === '' || $username === '' || $resetCode === '' || $newPassword === '' || $confirmPassword === '') {
-        echo "<script>alert('All fields are required.'); window.location.href = 'http://localhost/VISITACION/index.php?form=reset&email=" . urlencode($email) . "&username=" . urlencode($username) . "';</script>";
+        $msg = urlencode('All fields are required.');
+        header('Location: http://localhost/VISITACION/index.php?form=reset&status=error&message=' . $msg . '&email=' . urlencode($email) . '&username=' . urlencode($username));
         exit;
     }
 
     if ($newPassword !== $confirmPassword) {
-        echo "<script>alert('Passwords do not match.'); window.location.href = 'http://localhost/VISITACION/index.php?form=reset&email=" . urlencode($email) . "&username=" . urlencode($username) . "';</script>";
+        $msg = urlencode('Passwords do not match.');
+        header('Location: http://localhost/VISITACION/index.php?form=reset&status=error&message=' . $msg . '&email=' . urlencode($email) . '&username=' . urlencode($username));
         exit;
     }
 
@@ -24,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_password'])) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$row || (string)$row['verification_code'] !== (string)$resetCode) {
-            echo "<script>alert('Invalid reset code or account.'); window.location.href = 'http://localhost/VISITACION/index.php?form=reset&email=" . urlencode($email) . "&username=" . urlencode($username) . "';</script>";
+            $msg = urlencode('Invalid reset code or account.');
+            header('Location: http://localhost/VISITACION/index.php?form=reset&status=error&message=' . $msg . '&email=' . urlencode($email) . '&username=' . urlencode($username));
             exit;
         }
 
@@ -37,10 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_password'])) {
             ':username' => $username,
         ]);
 
-        echo "<script>alert('Password has been reset. You can now login.'); window.location.href = 'http://localhost/VISITACION/index.php';</script>";
+        $msg = urlencode('Password has been reset. You can now login.');
+        header('Location: http://localhost/VISITACION/index.php?status=success&message=' . $msg);
         exit;
     } catch (PDOException $e) {
-        echo "<script>alert('Server error.'); window.location.href = 'http://localhost/VISITACION/index.php?form=reset&email=" . urlencode($email) . "&username=" . urlencode($username) . "';</script>";
+        $msg = urlencode('Server error.');
+        header('Location: http://localhost/VISITACION/index.php?form=reset&status=error&message=' . $msg . '&email=' . urlencode($email) . '&username=' . urlencode($username));
         exit;
     }
 } else {
